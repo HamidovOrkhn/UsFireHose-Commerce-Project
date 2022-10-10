@@ -1,0 +1,91 @@
+﻿@model LoginDTO
+
+@{
+    ViewData["Title"] = "Sign In";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <meta name="robots" content="noindex" />
+    <title>@ViewData["Title"]</title>
+    <!-- Favicon-->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&subset=latin,cyrillic-ext" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" type="text/css">
+
+    <!-- Bootstrap Core Css -->
+    <link href="/admin/plugins/bootstrap/css/bootstrap.css" rel="stylesheet">
+
+    <!-- Waves Effect Css -->
+    <link href="/admin/plugins/node-waves/waves.css" rel="stylesheet" />
+
+    <!-- Animation Css -->
+    <link href="/admin/plugins/animate-css/animate.css" rel="stylesheet" />
+
+    <!-- Custom Css -->
+    <link href="/admin/css/style.css" rel="stylesheet">
+</head>
+
+<body class="login-page">
+    <div class="login-box">
+        <div class="logo">
+            <a href="javascript:void(0);">
+                <b>US Fire Hose</b>
+            </a>
+            <small>Admin Panel</small>
+        </div>
+        <div class="card">
+            <div class="body">
+                <form id="account" method="post">
+                    <div class="input-group">
+                        <div class="form-line">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" required autofocus />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <div class="form-line">
+                            <label asp-for="Password"></label>
+                            <input type="password" asp-for="Password" class="form-control" required />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <span class="text-danger mb-3">@TempData["Server-Error"]</span>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <button class="btn btn-block bg-pink waves-effect" type="submit">Sign in</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery Core Js -->
+    <script src="/admin/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="/admin/plugins/bootstrap/js/bootstrap.js"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="/admin/plugins/node-waves/waves.js"></script>
+
+    <!-- Validation Plugin Js -->
+    <script src="/admin/plugins/jquery-validation/jquery.validate.js"></script>
+
+    <!-- Custom Js -->
+    <script src="/admin/js/admin.js"></script>
+    <script src="/admin/js/pages/examples/sign-in.js"></script>
+
+    <partial name="_ValidationScriptsPartial" />
+</body>
+
+</html>

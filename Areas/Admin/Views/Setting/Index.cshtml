@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Setting>
+
+@{
+    ViewData["Title"] = "Settings";
+}
+
+@section Styles
+{
+<!-- JQuery DataTable Css -->
+<link href="/admin/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css" rel="stylesheet">
+}
+
+@section Scripts
+{
+<!-- Jquery DataTable Plugin Js -->
+<script src="/admin/plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="/admin/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+<script src="/admin/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+
+<script>
+    $(function () {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/admin/plugins/jquery-datatable/Azerbaijan.json'
+            },
+            autoWidth: false,
+            fixedHeader : true,
+            scrollX: true
+        } );
+    });
+</script>
+}
+
+<!-- Basic Examples -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                </ul>
+            </div>
+            <div class="body">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <table id="datatable" class="table table-bordered table-striped table-hover dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Key)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Value)
+                            </th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Key)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Value)
+                            </th>
+                            <th>Operations</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (Setting item in Model ?? new List<Setting>() { })
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Key</td>
+                                <td>
+                                    @if (item.Key!.Contains("image"))
+                                    {
+                                        <img src="@item.Value" style="height: 100px" alt="" />
+                                    }
+                                    else
+                                    {
+                                        @item.Value
+                                    }
+                                </td>
+                                <td>
+                                    <a href="/admin/setting/edit/@item.Id">
+                                        <i class="material-icons">mode_edit</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Basic Examples -->

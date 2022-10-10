@@ -1,0 +1,103 @@
+﻿@model Setting
+
+@{
+    ViewData["Title"] = "Edit Setting";
+}
+
+@section Styles
+{
+<link rel="stylesheet" type="text/css" href="/admin/devextreme/css/dx.material.blue.light.css" />
+}
+
+@section Scripts
+{
+<script src="/admin/devextreme/js/dx.all.js"></script>
+
+<script src="/admin/js/filemanager.js"></script>
+
+<!-- TinyMCE -->
+<script src="/admin/plugins/tinymce/tinymce.js"></script>
+
+<script>
+    $(function () {
+        //TinyMCE
+        tinymce.init({
+            selector: "textarea#tinymce",
+            theme: "modern",
+            height: 300,
+            plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools'
+            ],
+            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'print preview media | forecolor backcolor emoticons',
+            image_advtab: true
+        });
+        tinymce.suffix = ".min";
+        tinyMCE.baseURL = '/admin/plugins/tinymce';
+    });
+</script>
+}
+
+<partial name="_FileManagerModalPartial" />
+
+<!-- Vertical Layout -->
+<div class="row clearfix">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+            </div>
+            <div class="body">
+                <form enctype="multipart/form-data" method="post" action="/admin/setting/edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Key" class="control-label"></label>
+                            <input readonly asp-for="Key" class="form-control" />
+                            <span asp-validation-for="Key" class="text-danger"></span>
+                        </div>
+                    </div>
+                    @if (Model!.Key!.Contains("image"))
+                    {
+                        <div class="row">
+                            <div class="col-md-9">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <label asp-for="Value" class="control-label"></label>
+                                        <input asp-for="Value" class="form-control" />
+                                        <span asp-validation-for="Value" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-default waves-effect m-r-20" onclick='defineParameterName("Value")' data-toggle="modal" data-target="#file-manager-popup">Fayl Seç</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-group">
+                            <div class="form-line">
+                                <label asp-for="Value" class="control-label"></label>
+                                <textarea asp-for="Value" class="form-control"></textarea>
+                                <span asp-validation-for="Value" class="text-danger"></span>
+                            </div>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Vertical Layout -->

@@ -1,0 +1,102 @@
+﻿@model Blog
+@{
+    List<Blog> newBlogs = (List<Blog>)ViewData["NewBlogs"]!;
+    Dictionary<string, string>? settings = (Dictionary<string, string>?)ViewData["Settings"];
+    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+    var qsPath = Context.Request.Host;
+    var url = $"{qsPath}{routeUrl}";
+}
+<!-- Begin Uren's Breadcrumb Area -->
+<div style="background-image: url(@settings?["blog_details_cover_image"]?);" class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>@Model?.Title</h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/blogs">Blogs</a></li>
+                <li class="active">@Model?.Title</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Uren's Breadcrumb Area End Here -->
+<!-- Begin Uren's Blog Details Left Sidebar Area -->
+<div class="uren-blog_area uren-blog-details">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 order-lg-1 order-2">
+                <div class="uren-blog-sidebar-wrapper">
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Search</h4>
+                        <div class="search-form_area">
+                            <form class="search-form" method="get" asp-controller="@nameof(Blogs)" asp-action="@nameof(Index)">
+                                <input name="search" value="" type="text" class="search-field" placeholder="search here">
+                                <button type="submit" class="search-btn"><i class="ion-ios-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Recent Posts</h4>
+                        @if (newBlogs is not null)
+                        {
+                            @foreach (Blog item in newBlogs)
+                            {
+                                <div class="recent-post">
+                                    <div class="recent-post_thumb">
+                                        <a href="/blog/@item.Slug">
+                                            <img class="img-full" src="@item.ImagePath" alt="@item.Title">
+                                        </a>
+                                    </div>
+                                    <div class="recent-post_desc">
+                                        <span><a href="/blogs/details/@item.Slug">@item.Title</a></span>
+                                        <span class="post-date">@item.CreatedDate.ToString("dd/MM/yy")</span>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 order-lg-2 order-1">
+                <div class="blog-item">
+                    <div class="blog-img img-hover_effect">
+                        <a href="blog-details-left-sidebar.html">
+                            <img src="@Model?.ImagePath" alt="@Model?.Title">
+                        </a>
+                        <span class="post-date">@Model?.CreatedDate.ToString("dd-MM-yy")</span>
+                    </div>
+                    <div class="blog-content">
+                        <h3><a href="blog-details-left-sidebar.html">@Model?.Title</a></h3>
+                        @Html.Raw(@Model?.Description)
+                    </div>
+                    <div class="uren-social_link">
+                        <ul>
+                            <li class="facebook">
+                                <a href="https://www.facebook.com/sharer.php?u=@url" data-toggle="tooltip" target="_blank" title="Facebook">
+                                    <i class="fab fa-facebook"></i>
+                                </a>
+                            </li>
+                            <li class="twitter">
+                                <a href="https://twitter.com/intent/tweet?text=@(Model?.Title)&hashtags=USFireHose&via=dev_tip" data-toggle="tooltip" target="_blank" title="Twitter">
+                                    <i class="fab fa-twitter-square"></i>
+                                </a>
+                            </li>
+
+                            <li class="google-plus">
+                                <a href="https://vk.com/share.php?url=@url" data-toggle="tooltip" target="_blank" title="Vk">
+                                    <i class="fab fa-vk"></i>
+                                </a>
+                            </li>
+                            <li class="instagram">
+                                <a href="https://www.linkedin.com/sharing/share-offsite/?url=@url" data-toggle="tooltip" target="_blank" title="Linkedin">
+                                    <i class="fab fa-linkedin-in"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Blog Details Left Sidebar Area End Here -->

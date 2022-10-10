@@ -1,0 +1,131 @@
+﻿@model CheckoutDTO
+@{
+    ShoppingDTO? products = (ShoppingDTO?)ViewData["ShoppingItems"];
+    Dictionary<string, string>? settings = (Dictionary<string, string>?)ViewData["Settings"];
+}
+<!-- Begin Uren's Breadcrumb Area -->
+<div style="background-image: url(@settings?["checkout_cover_image"]?);" class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>Checkout</h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="active">Checkout</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Uren's Breadcrumb Area End Here -->
+<!-- Begin Uren's Checkout Area -->
+<div class="checkout-area">
+    <form method="post" action="/checkout" novalidate="novalidate">
+        <div class="checkout-area pt-60 pb-30">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-6 col-12">
+                        <div class="checkbox-form">
+                            <h3>Request Details</h3>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>First Name <span class="required">*</span></label>
+                                        <input placeholder="" asp-for="Name">
+                                        <span class="text-danger field-validation-valid" asp-validation-for="Name"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>Last Name <span class="required">*</span></label>
+                                        <input placeholder="" type="text" asp-for="Surname">
+                                        <span class="text-danger field-validation-valid" asp-validation-for="Surname"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="checkout-form-list">
+                                        <label>Address <span class="required">*</span></label>
+                                        <input placeholder="Street address" asp-for="Address">
+                                        <span class="text-danger field-validation-valid" asp-validation-for="Address"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>Email Address <span class="required">*</span></label>
+                                        <input placeholder="" asp-for="Email">
+                                        <span class="text-danger field-validation-valid" asp-validation-for="Email"></span>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="checkout-form-list">
+                                        <label>Phone  <span class="required">*</span></label>
+                                        <input style="background: #ffffff; border: 1px solid #e5e5e5; border-radius: 0; height: 42px; width: 100%; padding: 0 0 0 10px;" type="number" asp-for="Phone">
+                                        <span class="text-danger field-validation-valid" asp-validation-for="Phone"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="OrderDetails" name="OrderDetails" value="Product name: XD Series (NFPA), Quantity: 1, Category: Handline Nozzles ">
+                            <div class="order-notes">
+                                <div class="checkout-form-list">
+                                    <label>Order Notes</label>
+                                    <textarea id="checkout-mess" cols="30" rows="10" placeholder="Notes about your order, e.g. special notes about size and etc." asp-for="Desc"></textarea>
+                                    <span class="text-danger field-validation-valid" asp-validation-for="Desc"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12">
+                        <div class="your-order">
+                            <h3>Your order</h3>
+                            <div class="your-order-table table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th class="cart-product-name">Product</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="payment-body">
+                                        @if (products?.Products is not null)
+                                        {
+                                            @foreach (var item in products.Products.GroupBy(x => x.Id).Select(y => y.FirstOrDefault()))
+                                            {
+                                                <tr class="cart_item" id="payment49">
+                                                    <td style="text-align: center;" class="cart-product-name">@item?.Title<strong class="product-quantity"> × @products.Products.Where(x=>x.Id==item?.Id).Count()</strong></td>
+                                                </tr>
+                                            }
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="payment-method">
+                                <div class="payment-accordion">
+                                    <div id="accordion">
+                                        <div class="card">
+                                            <div class="card-header" id="#payment-1">
+                                                <h5 class="panel-title">
+                                                    <a class="" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                                        Information Purposes.
+                                                    </a>
+                                                </h5>
+                                            </div>
+                                            <div id="collapseOne" class="collapse show" data-parent="#accordion">
+                                                <div class="card-body">
+                                                    <p>When you request a quote, your information send to customer services. They will contact with you and give additional information about chosen products. Product price and Product quantity is just for additional information</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="order-button-payment">
+                                        <input value="Place Quote" type="submit">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- Uren's Checkout Area End Here -->

@@ -1,0 +1,122 @@
+﻿@model PaginationDTO<List<Blog>>
+@{
+    List<Blog> newBlogs = (List<Blog>)ViewData["NewBlogs"]!;
+    Dictionary<string, string>? settings = (Dictionary<string, string>?)ViewData["Settings"];
+    string search = (string)ViewData["Search"]!;
+}
+<!-- Begin Uren's Breadcrumb Area -->
+<div style="background-image: url(@settings?["blogs_cover_image"]?);" class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>Blogs</h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="active">Blogs</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Uren's Breadcrumb Area End Here -->
+<!-- Begin Uren's Blog Left Sidebar Area -->
+<div class="uren-blog_area grid-view_area blog-with_sidebar">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 order-lg-1 order-2">
+                <div class="uren-blog-sidebar-wrapper">
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Search</h4>
+                        <div class="search-form_area">
+                            <form class="search-form" method="get" asp-controller="@nameof(Blogs)" asp-action="@nameof(Index)">
+                                <input name="search" value="@search" type="text" class="search-field" placeholder="search here">
+                                <button type="submit" class="search-btn"><i class="ion-ios-search"></i></button>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="uren-blog-sidebar">
+                        <h4 class="uren-blog-sidebar-title">Recent Posts</h4>
+                        @if (newBlogs is not null)
+                        {
+                            @foreach (Blog item in newBlogs)
+                            {
+                                <div class="recent-post">
+                                    <div class="recent-post_thumb">
+                                        <a href="/blogs/details/@item.Slug">
+                                            <img class="img-full" src="@item.ImagePath" alt="@item.Title">
+                                        </a>
+                                    </div>
+                                    <div class="recent-post_desc">
+                                        <span><a href="/blogs/details/@item.Slug">@item.Title</a></span>
+                                        <span class="post-date">@item.CreatedDate.ToString("dd/MM/yy")</span>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 order-lg-2 order-1">
+                @if (Model!.Object!.Any())
+                {
+                    <div class="row blog-item_wrap">
+                        @foreach (Blog item in Model?.Object!)
+                        {
+                            <div class="col-xl-4 col-lg-6">
+                                <div class="blog-item">
+                                    <div style="height: 271px;" class="blog-img img-hover_effect">
+                                        <a href="/blogs/details/@item.Slug">
+                                            <img style="height:100%;" src="@item.ImagePath" alt="@item.Title">
+                                        </a>
+                                        <span class="post-date">@item.CreatedDate.ToString("dd/MM/yy")</span>
+                                    </div>
+                                    <div class="blog-content">
+                                        <h3><a href="/blogs/details/@item.Slug">@item.Title</a></h3>
+                                        <p>@item.SubTitle</p>
+                                        <div class="uren-btn-ps_left">
+                                            <a class="uren-btn-2" href="/blogs/details/@item.Slug">Read More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="uren-paginatoin-area">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <ul class="uren-pagination-box carlet-color">
+                                            @if (Model?.Page != Model?.StartPage)
+                                            {
+                                                <li><a class="Previous" href="?search=@search&page=@(Model?.Page)">Previous</a></li>
+                                            }
+                                            @for (int i = Model!.StartPage; i <= Model.EndPage; i++)
+                                            {
+                                                if (i == Model.Page)
+                                                {
+                                                    <li class="active"><a href="?search=@search&page=@(i+1)">@(i+1)</a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li><a href="?search=@search&page=@(i+1)">@(i+1)</a></li>
+                                                }
+                                            }
+                                            @if (Model.Page != Model.EndPage)
+                                            {
+                                                <li><a class="Next" href="?search=@search&page=@(Model.Page+2)">Next</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <h1 class="mb-5" style="text-align:center;">Nothing Found</h1>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Blog Left Sidebar Area End Here -->

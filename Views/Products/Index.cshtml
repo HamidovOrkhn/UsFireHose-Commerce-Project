@@ -1,0 +1,213 @@
+﻿@model PaginationDTO<List<Product>>
+@{
+    List<ProductCategory> productCategories = (List<ProductCategory>)ViewData["ProductCategories"]!;
+    List<ProductCategory> mainProductCategories = (List<ProductCategory>)ViewData["MainProductCategories"]!;
+    List<Product> newProducts = (List<Product>)ViewData["NewProducts"]!;
+    string category = (string)ViewData["Category"]!;
+    Dictionary<string, string>? settings = (Dictionary<string, string>?)ViewData["Settings"];
+}
+<div style="background-image: url(@settings?["products_cover_image"]?);" class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>Shop</h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="active">Shop</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Uren's Breadcrumb Area End Here -->
+<!-- Begin Uren's Shop Left Sidebar Area -->
+<div class="shop-content_wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-5 order-2 order-lg-1 order-md-1">
+                <div class="uren-sidebar-catagories_area">
+                    <div class="category-module uren-sidebar_categories">
+                        <div class="category-module_heading">
+                            <h5>Categories</h5>
+
+                        </div>
+                        <div class="module-body">
+                            <ul class="module-list_item">
+                                <li>
+                                    @if (mainProductCategories is not null)
+                                    {
+                                        @if (category == null)
+                                        {
+                                            <a class="active" href="?category=">All <span>@productCategories.Sum(x=>x.Products?.Count)</span></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="?category=">All <span>@productCategories.Sum(x=>x.Products?.Count)</span></a>
+                                        }
+                                        @foreach (ProductCategory item in mainProductCategories)
+                                        {
+                                            @if (item.Slug == category)
+                                            {
+                                                <a class="active" @(productCategories.Any(x=>x.ParentId==item.Id)==true?"":$"href=?category={item.Slug}")>@item.Title <span>@(productCategories.Any(x=>x.ParentId==item.Id)==true?productCategories.Where(x=>x.ParentId==item.Id).Sum(x=>x.Products?.Count):@item.Products?.Count)</span></a>
+                                            }
+                                            else
+                                            {
+                                                <a @(productCategories.Any(x=>x.ParentId==item.Id)==true?"":$"href=?category={item.Slug}")>@item.Title <span>@(productCategories.Any(x=>x.ParentId==item.Id)==true?productCategories.Where(x=>x.ParentId==item.Id).Sum(x=>x.Products?.Count):@item.Products?.Count)</span></a>
+                                            }
+                                            @if (productCategories.Any(x => x.ParentId == item.Id))
+                                            {
+                                                <ul class="module-sub-list_item">
+                                                    <li>
+                                                        @foreach (ProductCategory childCategory in productCategories.Where(x => x.ParentId == item.Id).ToList())
+                                                        {
+                                                            @if (childCategory.Slug == category)
+                                                            {
+                                                                <a style="color:#ffc400 !important;" href="?category=@childCategory.Slug">@childCategory.Title <span>@childCategory.Products?.Count</span></a>
+                                                            }
+                                                            else
+                                                            {
+                                                                <a href="?category=@childCategory.Slug">@childCategory.Title <span>@childCategory.Products?.Count</span></a>
+                                                            }
+                                                        }
+                                                    </li>
+                                                </ul>
+                                            }
+                                        }
+                                    }
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-7 order-1 order-lg-2 order-md-2">
+                @if (Model!.Object!.Any())
+                {
+                    <div class="shop-toolbar">
+                        <div class="product-view-mode">
+                            <a class="grid-1" data-target="gridview-1" data-toggle="tooltip" data-placement="top" title="1">1</a>
+                            <a class="grid-2" data-target="gridview-2" data-toggle="tooltip" data-placement="top" title="2">2</a>
+                            <a class="active grid-3" data-target="gridview-3" data-toggle="tooltip" data-placement="top" title="3">3</a>
+                            <a class="grid-4" data-target="gridview-4" data-toggle="tooltip" data-placement="top" title="4">4</a>
+                            <a class="grid-5" data-target="gridview-5" data-toggle="tooltip" data-placement="top" title="5">5</a>
+                            <a class="list" data-target="listview" data-toggle="tooltip" data-placement="top" title="List"><i class="fa fa-th-list"></i></a>
+                        </div>
+                    </div>
+                    <div class="shop-product-wrap grid gridview-3 img-hover-effect_area row">
+
+                        @foreach (Product item in Model!.Object ?? new())
+                        {
+                            <div class="col-lg-4">
+                                <div class="product-slide_item">
+                                    <div class="inner-slide">
+                                        <div class="single-product">
+                                            <div class="product-img">
+                                                <a href="/products/details/@item.Slug">
+                                                    <img class="primary-img" src="@item.ImageLink" alt="@item.Title">
+                                                    <img class="secondary-img" src="@item.ProductImages?.FirstOrDefault()?.ImageLink" alt="@item.ProductImages?.FirstOrDefault()?.Title">
+                                                </a>
+                                                @if (item.Discount)
+                                                {
+                                                    <div class="sticker-area-2">
+                                                        <span class="sticker-2">-@item.DiscountRate%</span>
+                                                        @if (newProducts!.Any(x => x.Id == item.Id))
+                                                        {
+                                                            <span class="sticker">New</span>
+                                                        }
+                                                    </div>
+
+                                                }
+                                                else
+                                                {
+                                                    @if (newProducts!.Any(x => x.Id == item.Id))
+                                                    {
+                                                        <div class="sticker">
+                                                            <span class="sticker">New</span>
+                                                        </div>
+                                                    }
+                                                }
+
+                                                <div class="add-actions">
+                                                    <ul>
+                                                        <li>
+                                                            <a class="uren-add_cart add-to-cart-button" value="@item.Id" data-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="product-content">
+                                                <div class="product-desc_info">
+                                                    <h6><a class="product-name" href="/products/details/@item.Slug">@item.Title</a></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-slide_item">
+                                    <div class="single-product">
+                                        <div class="product-img">
+                                            <a href="/product/@item.Slug">
+                                                <img class="primary-img" src="@item.ImageLink" alt="@item.Title">
+                                                <img class="secondary-img" src="@item.ProductImages?.FirstOrDefault()?.ImageLink" alt="@item.ProductImages?.FirstOrDefault()?.Title">
+                                            </a>
+                                        </div>
+                                        <div class="product-content">
+                                            <div class="product-desc_info">
+                                                <h6><a class="product-name" href="/products/details/@item.Slug">@item.Title</a></h6>
+                                                <div class="product-short_desc">
+                                                    @Html.Raw(item.Description)
+                                                </div>
+                                            </div>
+                                            <div class="add-actions">
+                                                <ul>
+                                                    <li>
+                                                        <a class="uren-add_cart add-to-cart-button" value="@item.Id" data-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="uren-paginatoin-area">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <ul class="uren-pagination-box primary-color">
+                                            @if (Model?.Page != Model?.StartPage)
+                                            {
+                                                <li><a class="Previous" href="?category=@category&page=@(Model?.Page)">Previous</a></li>
+                                            }
+                                            @for (int i = Model!.StartPage; i <= Model?.EndPage; i++)
+                                            {
+                                                if (i == Model?.Page)
+                                                {
+                                                    <li class="active"><a href="?category=@category&page=@(i+1)">@(i+1)</a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li><a href="?category=@category&page=@(i+1)">@(i+1)</a></li>
+                                                }
+                                            }
+                                            @if (Model?.Page != Model?.EndPage)
+                                            {
+                                                <li><a class="Next" href="?category=@category&page=@(Model!.Page+2)">Next</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <h1 class="mb-5" style="text-align:center;">Nothing Found</h1>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Shop Left Sidebar Area End Here -->

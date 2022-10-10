@@ -1,0 +1,26 @@
+﻿<!-- Top Bar -->
+<nav class="navbar">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+            <a href="javascript:void(0);" class="bars"></a>
+            <a class="navbar-brand" href="/admin/">US Fire Hose Admin</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbar-collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="/admin/home/clearcache?url=@Context?.Request?.Path" class="btn btn-primary" title="Cache">Clear Cache</a>
+                </li>
+                <li>
+                    <a href="#" title="Manage">Hi @User.Identity?.Name!</a>
+                </li>
+                <li>
+                    <a href="/admin/logout">Sign out</a>
+                    <form id="logout-form" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/identity/account/login">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- #Top Bar -->

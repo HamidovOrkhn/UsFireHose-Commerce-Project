@@ -1,0 +1,197 @@
+﻿<!doctype html>
+<html class="no-js" lang="zxx">
+
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>US Fire Hose</title>
+    <meta name="robots" content="noindex, follow" />
+    <meta name="description" content="US Fire Hose">
+    <meta name="keywords" content="US, Fire< Hose">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Favicon -->
+    <link rel="shortcut icon" type="image/x-icon" href="/assets/images/favicon.png">
+
+    <!-- CSS
+    ============================================ -->
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="/assets/css/vendor/bootstrap.min.css">
+    <!-- Fontawesome -->
+    <link rel="stylesheet" href="/assets/css/vendor/font-awesome.css">
+    <!-- Fontawesome Star -->
+    <link rel="stylesheet" href="/assets/css/vendor/fontawesome-stars.css">
+    <!-- Ion Icon -->
+    <link rel="stylesheet" href="/assets/css/vendor/ion-fonts.css">
+    <!-- Slick CSS -->
+    <link rel="stylesheet" href="/assets/css/plugins/slick.css">
+    <!-- Animation -->
+    <link rel="stylesheet" href="/assets/css/plugins/animate.css">
+    <!-- jQuery Ui -->
+    <link rel="stylesheet" href="/assets/css/plugins/jquery-ui.min.css">
+    <!-- Lightgallery -->
+    <link rel="stylesheet" href="/assets/css/plugins/lightgallery.min.css">
+    <!-- Nice Select -->
+    <link rel="stylesheet" href="/assets/css/plugins/nice-select.css">
+
+    <!-- Vendor & Plugins CSS (Please remove the comment from below vendor.min.css & plugins.min.css for better website load performance and remove css files from the above) -->
+    <!--
+    <script src="assets/js/vendor/vendor.min.js"></script>
+    <script src="assets/js/plugins/plugins.min.js"></script>
+    -->
+    <!-- Main Style CSS (Please use minify version for better website load performance) -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <!--<link rel="stylesheet" href="assets/css/style.min.css">-->
+    <link rel="stylesheet" href="/assets/css/plugins/sweetalert2.css" />
+
+    <style>
+        .add-to-cart-button {
+            cursor: pointer !important;
+        }
+
+        .shopping-product-remove {
+            cursor: pointer !important;
+        }
+    </style>
+</head>
+
+<body class="template-color-1">
+
+    <div class="main-wrapper">
+
+        <partial name="_Header" />
+
+        @RenderBody()
+
+        <partial name="_Footer" />
+    </div>
+
+
+    <template id="my-template">
+        <swal-title>
+            Added to Cart!
+        </swal-title>
+        <swal-button color="red" type="confirm">
+            OK
+        </swal-button>
+    </template>
+
+    <!-- JS
+    ============================================ -->
+    <!-- jQuery JS -->
+    <script src="/assets/js/vendor/jquery-1.12.4.min.js"></script>
+    <!-- Modernizer JS -->
+    <script src="/assets/js/vendor/modernizr-2.8.3.min.js"></script>
+    <!-- Popper JS -->
+    <script src="/assets/js/vendor/popper.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="/assets/js/vendor/bootstrap.min.js"></script>
+
+    <!-- Slick Slider JS -->
+    <script src="/assets/js/plugins/slick.min.js"></script>
+    <!-- Barrating JS -->
+    <script src="/assets/js/plugins/jquery.barrating.min.js"></script>
+    <!-- Counterup JS -->
+    <script src="/assets/js/plugins/jquery.counterup.js"></script>
+    <!-- Nice Select JS -->
+    <script src="/assets/js/plugins/jquery.nice-select.js"></script>
+    <!-- Sticky Sidebar JS -->
+    <script src="/assets/js/plugins/jquery.sticky-sidebar.js"></script>
+    <!-- Jquery-ui JS -->
+    <script src="/assets/js/plugins/jquery-ui.min.js"></script>
+    <script src="/assets/js/plugins/jquery.ui.touch-punch.min.js"></script>
+    <!-- Lightgallery JS -->
+    <script src="/assets/js/plugins/lightgallery.min.js"></script>
+    <!-- Scroll Top JS -->
+    <script src="/assets/js/plugins/scroll-top.js"></script>
+    <!-- Theia Sticky Sidebar JS -->
+    <script src="/assets/js/plugins/theia-sticky-sidebar.min.js"></script>
+    <!-- Waypoints JS -->
+    <script src="/assets/js/plugins/waypoints.min.js"></script>
+    <!-- jQuery Zoom JS -->
+    <script src="/assets/js/plugins/jquery.zoom.min.js"></script>
+    <script src="/assets/js/plugins/sweetalert2.all.js"></script>
+    <script src="/assets/js/plugins/jquery.mask.js"></script>
+    <!-- Vendor & Plugins JS (Please remove the comment from below vendor.min.js & plugins.min.js for better website load performance and remove js files from avobe) -->
+    <!--
+    <script src="assets/js/vendor/vendor.min.js"></script>
+    <script src="assets/js/plugins/plugins.min.js"></script>
+    -->
+    <!-- Main JS -->
+    <script src="/assets/js/main.js"></script>
+
+    @RenderSection("JS",false)
+    <script>
+        $(".add-to-cart-button").click(function(){
+            var id= $(this).attr("value");
+            $.ajax({
+                url:`/setshoppingitem/${id}`,
+                type:'GET',
+                contentType: "application/json; charset=utf-8",
+                cache:false,
+                success:function(data){
+                    $(".total-shopping-price").empty();
+                    $(".total-shopping-price").append(`$${data.totalPrice}`);
+                    $(".shopping-product-count").empty();
+                    $(".shopping-product-count").append(data.count);
+
+                    $(".minicart-list").empty();
+
+                    $.each(data.products,function(index,value){
+                        $(".minicart-list").append(`<li class="minicart-product">
+                                       <a class="product-item_remove shopping-product-remove" onclick="removeShoppingItem(${value.id})"><i class="ion-android-close"></i></a>
+                                        <div class="product-item_img">
+                                            <img src="${value.imageLink}" alt="${value.title}">
+                                        </div>
+                                        <div class="product-item_content">
+                                            <a class="product-item_title" href="/products/detail/${value.slug}">${value.title}</a>
+                                        </div>
+                                    </li>`);
+                    });
+                    Swal.fire({
+                      template: '#my-template'
+                    });
+                },
+                error:function(data){
+                }
+            });
+        });
+
+        function removeShoppingItem(id){
+            $.ajax({
+                url:`/removeshoppingitem/${id}`,
+                type:'GET',
+                contentType: "application/json; charset=utf-8",
+                cache:false,
+                success:function(data){
+                    $(".total-shopping-price").empty();
+                    $(".total-shopping-price").append(`$${data.totalPrice}`);
+                    $(".shopping-product-count").empty();
+                    $(".shopping-product-count").append(data.products.length);
+
+                    $(".minicart-list").empty();
+
+                    $.each(data.products,function(index,value){
+                        $(".minicart-list").append(`<li class="minicart-product">
+                                       <a class="product-item_remove shopping-product-remove" onclick="removeShoppingItem(${value.id})"><i class="ion-android-close"></i></a>
+                                        <div class="product-item_img">
+                                            <img src="${value.imageLink}" alt="${value.title}">
+                                        </div>
+                                        <div class="product-item_content">
+                                            <a class="product-item_title" href="/products/detail/${value.slug}">${value.title}</a>
+                                                <span class="product-item_quantity">${value.sellingCount} x $${value.price}</span>
+                                        </div>
+                                    </li>`);
+                    })
+
+
+                },
+                error:function(data){
+                }
+            });
+        }
+    </script>
+</body>
+
+
+</html>

@@ -1,0 +1,219 @@
+﻿@inject IGeneralRepository _generalRepository
+@{
+    List<ProductCategory> categories = await _generalRepository.GetCategories();
+    ContactUs phone = await _generalRepository.GetContactUs();
+    ShoppingDTO shoppingProduct = await _generalRepository.GetShoppingItems();
+    Dictionary<string, string> settings = await _generalRepository.GetSettings();
+}
+<!-- Begin Uren's Header Main Area -->
+<header class="header-main_area header-main_area-2 bg--black">
+    <div class="header-middle_area">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-3 col-lg-2 col-md-3 col-sm-5">
+                    <div class="header-logo_area">
+                        <a href="/">
+                            <img src="@settings?["header_logo_image"]?" alt="Uren's Logo">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-5 col-lg-6 d-none d-lg-block">
+                    <div class="hm-form_area">
+                        <form method="get" asp-controller="Home" asp-action="Search" class="hm-searchbox">
+                            <input type="text" name="key" placeholder="Enter your search key ...">
+                            <button class="header-search_btn" type="submit"><i class="ion-ios-search-strong"><span>Search</span></i></button>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-9 col-sm-7">
+                    <div class="header-right_area">
+                        <ul>
+                            <li class="mobile-menu_wrap d-flex d-lg-none">
+                                <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn color--white">
+                                    <i class="ion-navicon"></i>
+                                </a>
+                            </li>
+                            <li class="minicart-wrap">
+                                <a href="#miniCart" class="minicart-btn toolbar-btn">
+                                    <div class="minicart-count_area">
+                                        <span class="item-count shopping-product-count">@shoppingProduct?.Products?.Count</span>
+                                        <i class="ion-bag"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="contact-us_wrap">
+                                <a href="tel://@phone?.MainPhone"><i class="ion-android-call"></i>@phone?.MainPhone</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-top_area">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="custom-category_col col-12">
+                    <div class="category-menu category-menu-hidden">
+                        <div class="category-heading">
+                            <h2 class="categories-toggle">
+                                <span>Category</span>
+                            </h2>
+                        </div>
+                        <div id="cate-toggle" class="category-menu-list" style="display: none;">
+                            <ul>
+                                @if (categories is not null)
+                                {
+                                    @foreach (ProductCategory item in categories.Where(x => x.ParentId == 0))
+                                    {
+                                        @if (categories.Any(x => x.ParentId == item.Id))
+                                        {
+                                            <li class="right-menu">
+                                                <a>@item.Title</a>
+                                                <ul class="cat-dropdown cat-dropdown-2" style="display: block;">
+                                                    <li>
+                                                        @foreach (ProductCategory childCategory in categories.Where(x => x.ParentId == item.Id))
+                                                        {
+                                                            <a href="/products?category=@childCategory.Slug">@childCategory.Title</a>
+                                                        }
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li><a href="/products?category=@item.Slug">@item.Title</a></li>
+                                        }
+                                    }
+                                }
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="custom-menu_col col-12 d-none d-lg-block ml-5">
+                    <div class="main-menu_area position-relative">
+                        <nav class="main-nav">
+                            <ul>
+                                <li class=""><a href="/">Home</a></li>
+                                <li class=""><a href="/about-us">About Us</a></li>
+                                <li class=""><a href="/products">Shop</a></li>
+                                <li class=""><a href="/blogs">Blogs</a></li>
+                                <li class=""><a href="/contact-us">Contact</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="custom-search_col d-none d-md-block d-lg-none">
+                    <div class="hm-form_area">
+                        <form asp-controller="Home" asp-action="Search" class="hm-searchbox">
+                            <input type="text" placeholder="Enter your search key ...">
+                            <button class="header-search_btn" type="submit"><i class="ion-ios-search-strong"><span>Search</span></i></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="header-top_area header-sticky bg--black">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-8 col-lg-7 d-lg-block d-none">
+                    <div class="main-menu_area position-relative">
+                        <nav class="main-nav">
+                            <ul>
+                                <li class=""><a href="/">Home</a></li>
+                                <li class=""><a href="/about-us">About Us</a></li>
+                                <li class=""><a href="/products">Shop</a></li>
+                                <li class=""><a href="/blogs">Blogs</a></li>
+                                <li class=""><a href="/contact-us">Contact</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="col-sm-3 d-block d-lg-none">
+                    <div class="header-logo_area header-sticky_logo">
+                        <a href="index.html">
+                            <img src="assets/images/menu/logo/1.png" alt="Uren's Logo">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-5 col-sm-9">
+                    <div class="header-right_area">
+                        <ul>
+                            <li class="mobile-menu_wrap d-flex d-lg-none">
+                                <a href="#mobileMenu" class="mobile-menu_btn toolbar-btn color--white">
+                                    <i class="ion-navicon"></i>
+                                </a>
+                            </li>
+                            <li class="minicart-wrap">
+                                <a href="#miniCart" class="minicart-btn toolbar-btn">
+                                    <div class="minicart-count_area">
+                                        <span class="item-count shopping-product-count">@shoppingProduct?.Products?.Count</span>
+                                        <i class="ion-bag"></i>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="contact-us_wrap">
+                                <a href="tel://@phone?.MainPhone"><i class="ion-android-call"></i>@phone?.MainPhone</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="offcanvas-minicart_wrapper" id="miniCart">
+        <div class="offcanvas-menu-inner">
+            <a href="#" class="btn-close"><i class="ion-android-close"></i></a>
+            <div class="minicart-content">
+                <div class="minicart-heading">
+                    <h4>Shopping Cart</h4>
+                </div>
+                <ul class="minicart-list">
+                    @if (shoppingProduct?.Products is not null)
+                    {
+                        @foreach (Product? item in shoppingProduct.Products.GroupBy(x => x.Id).Select(y => y.FirstOrDefault()))
+                        {
+                            <li class="minicart-product">
+                                <a class="product-item_remove shopping-product-remove" onclick="removeShoppingItem(@item?.Id)"><i class="ion-android-close"></i></a>
+                                <div class="product-item_img">
+                                    <img src="@item?.ImageLink" alt="@item?.Title">
+                                </div>
+                                <div class="product-item_content">
+                                    <a class="product-item_title" href="/products/details/@item?.Slug">@item?.Title</a>
+                                </div>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div class="minicart-btn_area">
+                <a href="/checkout" class="uren-btn uren-btn_dark uren-btn_fullwidth">Checkout</a>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-menu_wrapper" id="mobileMenu">
+        <div class="offcanvas-menu-inner">
+            <div class="container">
+                <a href="#" class="btn-close"><i class="ion-android-close"></i></a>
+                <div class="offcanvas-inner_search">
+                    <form method="get" asp-controller="Home" asp-action="Search" class="inner-searchbox">
+                        <input type="text" placeholder="Search for item...">
+                        <button class="search_btn" type="submit"><i class="ion-ios-search-strong"></i></button>
+                    </form>
+                </div>
+                <nav class="offcanvas-navigation">
+                    <ul class="mobile-menu">
+                        <li class=""><a href="/">Home</a></li>
+                        <li class=""><a href="/about-us">About Us</a></li>
+                        <li class=""><a href="/products">Shop</a></li>
+                        <li class=""><a href="/blogs">Blogs</a></li>
+                        <li class=""><a href="/contact-us">Contact</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>

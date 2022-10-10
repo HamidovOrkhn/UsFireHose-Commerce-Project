@@ -1,0 +1,105 @@
+﻿@{
+    var controllerName = ViewContext.RouteData.Values["controller"]?.ToString()?.ToLowerInvariant();
+}
+
+<section>
+    <!-- Left Sidebar -->
+    <aside id="leftsidebar" class="sidebar">
+        <!-- Menu -->
+        <div class="menu">
+            <ul class="list">
+                <li class="@(controllerName == "home" ? "active" : "")">
+                    <a href="/admin/home">
+                        <i class="material-icons">home</i>
+                        <span>Home page</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "slide" ? "active" : "")">
+                    <a href="/admin/slide">
+                        <i class="material-icons">panorama</i>
+                        <span>Slides</span>
+                    </a>
+                </li>
+
+                <li class="@(controllerName == "products" ? "active" : "")">
+                    <a href="/admin/products">
+                        <i class="material-icons">store</i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "blog" ? "active" : "")">
+                    <a href="/admin/blog">
+                        <i class="material-icons">developer_board</i>
+                        <span>Blogs</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "banner" ? "active" : "")">
+                    <a href="/admin/banner">
+                        <i class="material-icons">burst_mode</i>
+                        <span>Banners</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "contactus" ? "active" : "")">
+                    <a href="/admin/contactus">
+                        <i class="material-icons">call</i>
+                        <span>Contact</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "aboutus" ? "active" : "")">
+                    <a href="/admin/aboutus">
+                        <i class="material-icons">description</i>
+                        <span>About us</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "message" ? "active" : "")">
+                    <a href="/admin/message">
+                        <i class="material-icons">comment</i>
+                        <span>Messages</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "productcategory" ? "active" : "")">
+                    <a href="/admin/productcategory">
+                        <i class="material-icons">view_list</i>
+                        <span>Product Categories</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "order" ? "active" : "")">
+                    <a href="/admin/order">
+                        <i class="material-icons dp48">reorder</i>
+                        <span>Orders</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "setting" ? "active" : "")">
+                    <a href="/admin/setting">
+                        <i class="material-icons">settings</i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "filemanager" ? "active" : "")">
+                    <a href="/admin/filemanager">
+                        <i class="material-icons">collections</i>
+                        <span>File Manager</span>
+                    </a>
+                </li>
+                <li class="@(controllerName == "user" ? "active" : "")">
+                    <a href="/admin/user">
+                        <i class="material-icons">assignment_ind</i>
+                        <span>Users</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- #Menu -->
+        <!-- Footer -->
+        <div class="legal">
+            <div class="copyright">
+                &copy; 2022 <a href="">US Fire Hose</a>.
+            </div>
+            <div class="version">
+                <b>Version: </b> 1.0.0
+            </div>
+        </div>
+        <!-- #Footer -->
+    </aside>
+    <!-- #END# Left Sidebar -->
+</section>

@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Message>
+
+@{
+    ViewData["Title"] = "Messages";
+}
+
+@section Styles
+{
+<!-- JQuery DataTable Css -->
+<link href="/admin/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css" rel="stylesheet">
+}
+
+@section Scripts
+{
+<!-- Jquery DataTable Plugin Js -->
+<script src="/admin/plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="/admin/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+<script src="/admin/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+
+<script>
+    $(function () {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/admin/plugins/jquery-datatable/Azerbaijan.json'
+            },
+            autoWidth: false,
+            fixedHeader : true,
+            scrollX: true
+        } );
+    });
+</script>
+}
+
+<!-- Basic Examples -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                </ul>
+            </div>
+            <div class="body">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <table id="datatable" class="table table-bordered table-striped table-hover dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Subject)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MessageText)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatedDate)
+                            </th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Name)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Email)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Subject)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MessageText)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.CreatedDate)
+                            </th>
+                            <th>Operations</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (Message item in Model ?? new List<Message>() { })
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Name</td>
+                                <td>@item.Email</td>
+                                <td>@item.Subject</td>
+                                <td>@item.MessageText</td>
+                                <td>@item.CreatedDate</td>
+                                <td>
+                                    <a href="#" onclick="deleteModal('delete@(item.Id)');">
+                                        <i class="material-icons" style="color: #fb483a">delete</i>
+                                    </a>
+
+                                    <form id='delete@(item.Id)' method="post" action="/admin/message/delete">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Basic Examples -->

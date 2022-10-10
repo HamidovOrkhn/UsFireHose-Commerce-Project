@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "File Manager";
+}
+
+<!-- Basic Examples -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+            </div>
+            <div class="body">
+                <div id="file-manager"></div>
+                <div id="photo-popup"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles
+{
+<link rel="stylesheet" type="text/css" href="/admin/devextreme/css/dx.material.blue.light.css" />
+}
+
+@section Scripts
+{
+<script src="/admin/devextreme/js/dx.all.js"></script>
+
+<script>
+    $(function () {
+        $("#file-manager").dxFileManager({
+            name: "fileManager",
+            fileSystemProvider: new DevExpress.fileManagement.RemoteFileSystemProvider({
+                endpointUrl: "/api/file-manager-file-system-images"
+            }),
+            currentPath: "Widescreen",
+            permissions: {
+                create: true,
+                copy: true,
+                move: true,
+                delete: true,
+                rename: true,
+                upload: true,
+                download: true
+            },
+            onSelectedFileOpened: function(e) {
+                var popup = $("#photo-popup").dxPopup("instance");
+                popup.option({
+                    "contentTemplate": '<p>Fayl url-i: ' + e.file.dataItem.url + '</p><img src="' + e.file.dataItem.url + '" class="photo-popup-image"  alt=""/>'
+                });
+                popup.show();
+            }
+        });
+
+        $("#photo-popup").dxPopup({
+            maxHeight: 600,
+            closeOnOutsideClick: true,
+            onContentReady: function(e) {
+                var $contentElement = e.component.content();
+                $contentElement.addClass("photo-popup-content");
+              }
+        });
+    });
+</script>
+}

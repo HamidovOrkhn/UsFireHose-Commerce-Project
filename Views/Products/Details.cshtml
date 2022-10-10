@@ -1,0 +1,236 @@
+﻿@model Product
+@{
+    List<Product> relatedProducts = (List<Product>)ViewData["RelatedProducts"]!;
+    List<Product> newProducts = (List<Product>)ViewData["NewProducts"]!;
+    Dictionary<string, string>? settings = (Dictionary<string, string>?)ViewData["Settings"];
+    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+    var qsPath = Context.Request.Host;
+    var url = $"{qsPath}{routeUrl}";
+}
+<!-- Begin Uren's Breadcrumb Area -->
+<div style="background-image: url(@settings?["product_details_cover_image"]?);" class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>@Model?.Title</h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/products">Shop</a></li>
+                <li class="active">@Model?.Title</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Uren's Breadcrumb Area End Here -->
+<!-- Begin Uren's Single Product Area -->
+@if (Model is not null)
+{
+    <div class="sp-area">
+        <div class="container-fluid">
+            <div class="sp-nav">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="sp-img_area">
+                            <div class="sp-img_slider slick-img-slider uren-slick-slider" data-slick-options='{
+                                    "slidesToShow": 1,
+                                    "arrows": false,
+                                    "fade": true,
+                                    "draggable": false,
+                                    "swipe": false,
+                                    "asNavFor": ".sp-img_slider-nav"
+                                    }'>
+                                <div class="single-slide red zoom">
+                                    <img src="@Model?.ImageLink" alt="@Model?.Title">
+                                </div>
+                                @if (Model?.ProductImages is not null)
+                                {
+                                    @foreach (ProductImage item in Model?.ProductImages!)
+                                    {
+                                        <div class="single-slide red zoom">
+                                            <img src="@item.ImageLink" alt="@item.Title">
+                                        </div>
+                                    }
+                                }
+                            </div>
+                            <div class="sp-img_slider-nav slick-slider-nav uren-slick-slider slider-navigation_style-3" data-slick-options='{
+                                    "slidesToShow": 3,
+                                    "asNavFor": ".sp-img_slider",
+                                    "focusOnSelect": true,
+                                    "arrows" : true,
+                                    "spaceBetween": 30
+                                    }' data-slick-responsive='[
+                                            {"breakpoint":1501, "settings": {"slidesToShow": 3}},
+                                            {"breakpoint":992, "settings": {"slidesToShow": 4}},
+                                            {"breakpoint":768, "settings": {"slidesToShow": 3}},
+                                            {"breakpoint":575, "settings": {"slidesToShow": 2}}
+                                        ]'>
+                                <div class="single-slide red">
+                                    <img src="@Model?.ImageLink" alt="@Model?.Title">
+                                </div>
+                                @if (Model?.ProductImages is not null)
+                                {
+                                    @foreach (ProductImage item in Model?.ProductImages!)
+                                    {
+                                        <div class="single-slide red">
+                                            <img src="@item.ImageLink" alt="@item.Title">
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8">
+                        <div class="sp-content">
+                            <div class="sp-heading">
+                                <h5><a href="#">@Model?.Title</a></h5>
+                            </div>
+                            <div class="sp-essential_stuff">
+                                <ul>
+                                    <li>Stock Level:  <a href="javascript:void(0)">@Model?.StockLevel</a></li>
+                                    <li>Product Status: <a href="javascript:void(0)">@( @Model?.StockStatus==true?"In Stock":"Out of Stock")</a></li>
+                                    <li>Item Number: <a href="javascript:void(0)">@Model?.ItemNumber</a></li>
+                                    <li>Weight: <a href="javascript:void(0)"><span>@Model?.Weight lb</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="product-size_box">
+                                <uL>
+                                    @Html.Raw(Model?.ProductFeatures)
+                                </uL>
+
+                            </div>
+                            <div class="qty-btn_area">
+                                <ul>
+                                    <li><a class="qty-cart_btn add-to-cart-button" value="@Model?.Id">Add To Cart</a></li>
+                                </ul>
+                            </div>
+                            <div class="uren-social_link">
+                                <ul>
+                                    <li class="facebook">
+                                        <a href="https://www.facebook.com/sharer.php?u=@url" data-toggle="tooltip" target="_blank" title="Facebook">
+                                            <i class="fab fa-facebook"></i>
+                                        </a>
+                                    </li>
+                                    <li class="twitter">
+                                        <a href="https://twitter.com/intent/tweet?text=@(Model?.Title)&hashtags=USFireHose&via=dev_tip" data-toggle="tooltip" target="_blank" title="Twitter">
+                                            <i class="fab fa-twitter-square"></i>
+                                        </a>
+                                    </li>
+
+                                    <li class="google-plus">
+                                        <a href="https://vk.com/share.php?url=@url" data-toggle="tooltip" target="_blank" title="Vk">
+                                            <i class="fab fa-vk"></i>
+                                        </a>
+                                    </li>
+                                    <li class="instagram">
+                                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=@url" data-toggle="tooltip" target="_blank" title="Linkedin">
+                                            <i class="fab fa-linkedin-in"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<!-- Uren's Single Product Area End Here -->
+<!-- Begin Uren's Single Product Tab Area -->
+<div class="sp-product-tab_area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="sp-product-tab_nav">
+                    <div class="product-tab">
+                        <ul class="nav product-menu">
+                            <li>
+                                <a class="active" data-toggle="tab" href="#description"><span>Specifications</span></a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="tab-content uren-tab_content">
+                        <div id="description" class="tab-pane active show" role="tabpanel">
+                            <div class="product-description">
+                                @Html.Raw(Model?.Description)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Single Product Tab Area End Here -->
+<!-- Begin Uren's Product Area -->
+<div class="uren-product_area mb-5">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title_area">
+                    <span></span>
+                    <h3>Related Products</h3>
+                </div>
+                <div class="product-slider uren-slick-slider slider-navigation_style-1 img-hover-effect_area" data-slick-options='{
+                        "slidesToShow": 6,
+                        "arrows" : true
+                        }' data-slick-responsive='[
+                                                {"breakpoint":1501, "settings": {"slidesToShow": 4}},
+                                                {"breakpoint":1200, "settings": {"slidesToShow": 3}},
+                                                {"breakpoint":992, "settings": {"slidesToShow": 2}},
+                                                {"breakpoint":767, "settings": {"slidesToShow": 1}},
+                                                {"breakpoint":480, "settings": {"slidesToShow": 1}}
+                                            ]'>
+                    @if (relatedProducts is not null)
+                    {
+                        @foreach (Product item in relatedProducts)
+                        {
+                            <div class="product-slide_item">
+                                <div class="inner-slide">
+                                    <div class="single-product">
+                                        <div class="product-img">
+                                            <a href="/products/details/@item.Slug">
+                                                <img class="primary-img" src="@item.ImageLink" alt="@item.Title">
+                                                <img class="secondary-img" src="@item.ProductImages?.FirstOrDefault()?.ImageLink" alt="@item.ProductImages?.FirstOrDefault()?.Title">
+                                            </a>
+                                            @if (item.Discount)
+                                            {
+                                                <div class="sticker-area-2">
+                                                    <span class="sticker-2">-@item.DiscountRate%</span>
+                                                    @if (newProducts!.Any(x => x.Id == item.Id))
+                                                    {
+                                                        <span class="sticker">New</span>
+                                                    }
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                @if (newProducts!.Any(x => x.Id == item.Id))
+                                                {
+                                                    <span class="sticker">New</span>
+                                                }
+                                            }
+                                            <div class="add-actions">
+                                                <ul>
+                                                    <li>
+                                                        <a class="uren-add_cart add-to-cart-button" value="@item.Id" data-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="product-content">
+                                            <div class="product-desc_info">
+                                                <h6><a class="product-name" href="/products/details/@item.Slug">@item.Title</a></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Product Area End Here -->

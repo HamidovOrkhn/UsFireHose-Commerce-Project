@@ -1,0 +1,52 @@
+﻿@model CreateByLinkRequestDTO
+
+@{
+    ViewData["Title"] = "Create Product";
+    string message = (string)ViewData["Message"]!;
+    string error = (string)ViewData["Error"]!;
+}
+
+<!-- Vertical Layout -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+            </div>
+            <div class="body">
+                <form enctype="multipart/form-data" method="post" action="/admin/products/createbylink">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @if (message is object)
+                    {
+                        <div class="text-success">@message</div>
+                    }                    
+                    @if (error is object)
+                    {
+                        <div class="text-danger">@error</div>
+                    }
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Link" class="control-label"></label>
+                            <input asp-for="Link" class="form-control" />
+                            <span asp-validation-for="Link" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line" id="formcategories">
+                            <label asp-for="CategoryId" class="control-label"></label>
+                            <select asp-for="CategoryId" asp-items="@((SelectList?)ViewData["Categories"])" class="form-control show-tick">
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input id="savebutton" type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Vertical Layout -->

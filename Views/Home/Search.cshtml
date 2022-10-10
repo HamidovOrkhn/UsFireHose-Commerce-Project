@@ -1,0 +1,171 @@
+﻿@model PaginationDTO<List<Product>>
+@{
+    List<ProductCategory> productCategories = (List<ProductCategory>)ViewData["ProductCategories"]!;
+    List<Product> newProducts = (List<Product>)ViewData["NewProducts"]!;
+    Dictionary<string, string>? settings = (Dictionary<string, string>?)ViewData["Settings"];
+    string searchKey = (string)ViewData["SearchKey"]!;
+}
+<div style="background-image: url(@settings?["search_cover_image"]?);" class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>Search Results</h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="active">Search Results</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Uren's Breadcrumb Area End Here -->
+<!-- Begin Uren's Shop Left Sidebar Area -->
+<div class="shop-content_wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 order-1 order-md-2">
+                @if (Model!.Object!.Any())
+                {
+                    <div class="shop-toolbar">
+                        <div class="product-view-mode">
+                            <a class="grid-1" data-target="gridview-1" data-toggle="tooltip" data-placement="top" title="1">1</a>
+                            <a class="grid-2" data-target="gridview-2" data-toggle="tooltip" data-placement="top" title="2">2</a>
+                            <a class="active grid-3" data-target="gridview-3" data-toggle="tooltip" data-placement="top" title="3">3</a>
+                            <a class="grid-4" data-target="gridview-4" data-toggle="tooltip" data-placement="top" title="4">4</a>
+                            <a class="grid-5" data-target="gridview-5" data-toggle="tooltip" data-placement="top" title="5">5</a>
+                            <a class="list" data-target="listview" data-toggle="tooltip" data-placement="top" title="List"><i class="fa fa-th-list"></i></a>
+                        </div>
+                    </div>
+                    <div class="shop-product-wrap grid gridview-3 img-hover-effect_area row">
+
+                        @foreach (Product item in Model?.Object!)
+                        {
+                            <div class="col-lg-4">
+                                <div class="product-slide_item">
+                                    <div class="inner-slide">
+                                        <div class="single-product">
+                                            <div class="product-img">
+                                                <a href="/products/details/@item.Slug">
+                                                    <img class="primary-img" src="@item.ImageLink" alt="@item.Title">
+                                                    <img class="secondary-img" src="@item.ProductImages?.FirstOrDefault()?.ImageLink" alt="@item.ProductImages?.FirstOrDefault()?.Title">
+                                                </a>
+                                                @if (item.Discount)
+                                                {
+                                                    <div class="sticker-area-2">
+                                                        <span class="sticker-2">-@item.DiscountRate%</span>
+                                                        @if (newProducts!.Any(x => x.Id == item.Id))
+                                                        {
+                                                            <span class="sticker">New</span>
+                                                        }
+                                                    </div>
+
+                                                }
+                                                else
+                                                {
+                                                    @if (newProducts!.Any(x => x.Id == item.Id))
+                                                    {
+                                                        <div class="sticker">
+                                                            <span class="sticker">New</span>
+                                                        </div>
+                                                    }
+                                                }
+
+                                                <div class="add-actions">
+                                                    <ul>
+                                                        <li>
+                                                            <a class="uren-add_cart add-to-cart-button" value="@item.Id" data-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                            <div class="product-content">
+                                                <div class="product-desc_info">
+                                                    <h6><a class="product-name" href="/products/details/@item.Slug">@item.Title</a></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="list-slide_item">
+                                    <div class="single-product">
+                                        <div class="product-img">
+                                            <a href="/product/@item.Slug">
+                                                <img class="primary-img" src="@item.ImageLink" alt="@item.Title">
+                                                <img class="secondary-img" src="@item.ProductImages?.FirstOrDefault()?.ImageLink" alt="@item.ProductImages?.FirstOrDefault()?.Title">
+                                            </a>
+                                        </div>
+                                        <div class="product-content">
+                                            <div class="product-desc_info">
+                                                <h6><a class="product-name" href="/products/details/@item.Slug">@item.Title</a></h6>
+                                                <div class="price-box">
+                                                    @if (@item.Discount)
+                                                    {
+                                                        <span style="padding:10px 15px; color:#fff;" class="new-price badge badge-dark new-price-2">$@Math.Round((item.Price*(100-item.DiscountRate))/100,2)</span>
+                                                        <span class="old-price">$@Math.Round(item.Price,2)</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span style="padding:10px 15px; color:#fff;" class="new-price badge badge-dark">$@item.Price</span>
+                                                    }
+                                                </div>
+                                                <div class="product-short_desc">
+                                                    @Html.Raw(item.Description)
+                                                </div>
+                                            </div>
+                                            <div class="add-actions">
+                                                <ul>
+                                                    <li>
+                                                        <a class="uren-add_cart" href="cart.html" data-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
+                                                    </li>
+                                                    <li class="quick-view-btn" data-toggle="modal" data-target="#exampleModalCenter">
+                                                        <a href="javascript:void(0)" data-toggle="tooltip" data-placement="top" title="Quick View">
+                                                            <i class="ion-android-open"></i>
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="uren-paginatoin-area">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <ul class="uren-pagination-box primary-color">
+                                            @if (Model?.Page != Model?.StartPage)
+                                            {
+                                                <li><a class="Previous" href="?key=@searchKey&page=@(Model?.Page)">Previous</a></li>
+                                            }
+                                            @for (int i = Model!.StartPage; i <= Model?.EndPage; i++)
+                                            {
+                                                if (i == Model?.Page)
+                                                {
+                                                    <li class="active"><a href="?key=@searchKey&page=@(i+1)">@(i+1)</a></li>
+                                                }
+                                                else
+                                                {
+                                                    <li><a href="?key=@searchKey&page=@(i+1)">@(i+1)</a></li>
+                                                }
+                                            }
+                                            @if (Model?.Page != Model?.EndPage)
+                                            {
+                                                <li><a class="Next" href="?key=@searchKey&page=@(Model!.Page+2)">Next</a></li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <h1 class="mb-5" style="text-align:center;">Nothing Found</h1>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Shop Left Sidebar Area End Here -->

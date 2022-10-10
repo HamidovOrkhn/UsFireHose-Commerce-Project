@@ -1,0 +1,259 @@
+﻿@model Product
+
+@{
+    ViewData["Title"] = "Create Product";
+}
+
+@section Styles
+{
+<link rel="stylesheet" type="text/css" href="/admin/devextreme/css/dx.material.blue.light.css" />
+}
+
+@section Scripts
+{
+<script src="/admin/devextreme/js/dx.all.js"></script>
+
+<script src="/admin/js/filemanager.js"></script>
+
+<!-- TinyMCE -->
+<script src="/admin/plugins/tinymce/tinymce.js"></script>
+
+<script>
+    var imageIndex = 0;
+
+    function addImageRow(file = { title: "", parentId: "", imageLink: ""}){
+        let innerHtml = `
+        <div class="row clone_images" id="image-index-` + imageIndex + `">
+            <input type="hidden" name="productimages[` + imageIndex + `][parentid]" value="` + file.parentId + `" />
+            <input type="hidden" name="productimages[` + imageIndex + `][id]" value="` + file.id + `" />
+            <div class="col-md-3">
+                <img src="` + file.imageLink + `" style="height: 100px; margin-bottom: 2rem;" alt="">
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Image Name</label>
+                        <input required name="productimages[`+ imageIndex +`][title]" class="form-control" value="` + file.title + `"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Image Link</label>
+                        <input required name="productimages[`+ imageIndex +`][imageLink]" class="form-control" value="` + file.imageLink + `"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <button type="button" id="clone-images-button-`+imageIndex+`" class="btn btn-default waves-effect m-r-20 clone-images-button" onclick='defineParameterName("productimages[`+ imageIndex +`][imageLink]")' data-toggle="modal" data-target="#file-manager-popup">Select Image</button>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <button type="button" class="btn btn-danger waves-effect m-r-20" onclick='$("#image-index-` + imageIndex + `").remove() && renumber_images()'>Remove</button>
+                </div>
+            </div>
+        </div>`;
+        $("#list-of-images").append(innerHtml);
+        imageIndex++;
+    }
+
+    $(function () {
+        //TinyMCE
+        tinymce.init({
+            selector: "textarea#tinymce",
+            theme: "modern",
+            height: 300,
+            plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools'
+            ],
+            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'print preview media | forecolor backcolor emoticons',
+            image_advtab: true
+        });
+        tinymce.suffix = ".min";
+        tinyMCE.baseURL = '/admin/plugins/tinymce';
+    });
+
+    $(function () {
+        //TinyMCE
+        tinymce.init({
+            selector: "textarea#tinymce2",
+            theme: "modern",
+            height: 300,
+            plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools'
+            ],
+            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'print preview media | forecolor backcolor emoticons',
+            image_advtab: true
+        });
+        tinymce.suffix = ".min";
+        tinyMCE.baseURL = '/admin/plugins/tinymce';
+    });
+
+</script>
+
+
+<script>
+    $("#savebutton").click(function(){
+        var value = $("#Slug").val();
+        var text=$("#Title").val()
+        if(value=="")
+        {
+            $('#Slug').val(convertToSlug(text));
+        }
+    });
+    function convertToSlug(Text) {
+      return Text.toLowerCase()
+                 .replace(/[^\w ]+/g, '')
+                 .replace(/ +/g, '-');
+    }
+
+    function renumber_images() {
+        $(".clone_images").each(function(index) {
+            $(this).find(".clone-images-button").attr("onclick","defineParameterName('productimages["+index+"][imageLink]')");
+            var prefix = "productimages[" + index + "]";
+            $(this).find("input").each(function() {
+                this.name = this.name.replace(/productimages\[\d+\]/, prefix);
+            });
+        });
+    }
+</script>
+}
+
+<partial name="_FileManagerModalPartial" />
+
+<!-- Vertical Layout -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+            </div>
+            <div class="body">
+                <form enctype="multipart/form-data" method="post" action="/admin/products/add">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <label asp-for="ItemNumber" class="control-label"></label>
+                                <input asp-for="ItemNumber" class="form-control" />
+                                <span asp-validation-for="ItemNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-line" id="formcategories">
+                            <label asp-for="CategoryId" class="control-label"></label>
+                            <select asp-for="CategoryId" asp-items="@((SelectList?)ViewData["Categories"])" class="form-control show-tick">
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Price" class="control-label"></label>
+                            <input type="number" step="0.001" asp-for="Price" class="form-control" />
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group form-check">
+                        <label asp-for="Discount" class="control-label"></label>
+                        <div class="switch">
+                            <label>Passive<input asp-for="Discount" type="checkbox"><span class="lever"></span>Active</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="DiscountRate" class="control-label"></label>
+                            <input type="number" step="0.001" asp-for="DiscountRate" class="form-control" />
+                            <span asp-validation-for="DiscountRate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea id="tinymce" asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group form-check">
+                        <label asp-for="StockStatus" class="control-label"></label>
+                        <div class="switch">
+                            <label>Passive<input asp-for="StockStatus" type="checkbox"><span class="lever"></span>Active</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="StockLevel" class="control-label"></label>
+                            <input type="number" asp-for="StockLevel" class="form-control" />
+                            <span asp-validation-for="StockLevel" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Weight" class="control-label"></label>
+                            <input type="number" step="0.001" asp-for="Weight" class="form-control" />
+                            <span asp-validation-for="Weight" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group form-check">
+                        <label asp-for="Status" class="control-label"></label>
+                        <div class="switch">
+                            <label>Passive<input asp-for="Status" type="checkbox" checked><span class="lever"></span>Active</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="ProductFeatures" class="control-label"></label>
+                            <textarea id="tinymce2" asp-for="ProductFeatures" class="form-control"></textarea>
+                            <span asp-validation-for="ProductFeatures" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <label asp-for="ImageLink" class="control-label"></label>
+                                    <input asp-for="ImageLink" class="form-control" />
+                                    <span asp-validation-for="ImageLink" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <button type="button" class="btn btn-default waves-effect m-r-20" onclick='defineParameterName("ImageLink")' data-toggle="modal" data-target="#file-manager-popup">Select Image</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="button" value="Add Image" onclick="addImageRow()" class="btn btn-primary" />
+                    </div>
+                    <div id="list-of-images">
+                    </div>
+                    <div class="form-group">
+                        <input id="savebutton" type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Vertical Layout -->

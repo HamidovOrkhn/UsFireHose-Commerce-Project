@@ -1,0 +1,87 @@
+﻿@model User
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+@section Styles
+{
+<link rel="stylesheet" type="text/css" href="/admin/devextreme/css/dx.material.blue.light.css" />
+}
+
+@section Scripts
+{
+<script src="/admin/devextreme/js/dx.all.js"></script>
+
+<script src="/admin/js/filemanager.js"></script>
+
+<!-- TinyMCE -->
+<script src="/admin/plugins/tinymce/tinymce.js"></script>
+
+<script>
+    $(function () {
+        //TinyMCE
+        tinymce.init({
+            selector: "textarea#tinymce",
+            theme: "modern",
+            height: 300,
+            plugins: [
+                'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                'searchreplace wordcount visualblocks visualchars code fullscreen',
+                'insertdatetime media nonbreaking save table contextmenu directionality',
+                'emoticons template paste textcolor colorpicker textpattern imagetools'
+            ],
+            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'print preview media | forecolor backcolor emoticons',
+            image_advtab: true
+        });
+        tinymce.suffix = ".min";
+        tinyMCE.baseURL = '/admin/plugins/tinymce';
+    });
+</script>
+}
+
+<partial name="_FileManagerModalPartial" />
+
+<!-- Vertical Layout -->
+<div class="row clearfix">
+    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+            </div>
+            <div class="body">
+                <form enctype="multipart/form-data" method="post" action="/admin/user/alter">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="Id" />
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Name" class="control-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group form-check">
+                        <label asp-for="Status" class="control-label"></label>
+                        <div class="switch">
+                            <label>Passive<input asp-for="Status" type="checkbox" checked><span class="lever"></span>Active</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Vertical Layout -->

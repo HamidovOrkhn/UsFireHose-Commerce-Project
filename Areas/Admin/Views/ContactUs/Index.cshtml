@@ -1,0 +1,138 @@
+﻿@model IEnumerable<ContactUs>
+
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+@section Styles
+{
+<!-- JQuery DataTable Css -->
+<link href="/admin/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css" rel="stylesheet">
+}
+
+@section Scripts
+{
+<!-- Jquery DataTable Plugin Js -->
+<script src="/admin/plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="/admin/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+<script src="/admin/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+
+<script>
+    $(function () {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/admin/plugins/jquery-datatable/Azerbaijan.json'
+            },
+            autoWidth: false,
+            fixedHeader : true,
+            scrollX: true
+        } );
+    });
+</script>
+}
+
+<!-- Basic Examples -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                </ul>
+            </div>
+            <div class="body">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <table id="datatable" class="table table-bordered table-striped table-hover dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Address)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MainPhone)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SecondPhone)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MainEmail)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SecondEmail)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MapX)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MapY)
+                            </th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Address)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MainPhone)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SecondPhone)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MainEmail)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SecondEmail)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MapX)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MapY)
+                            </th>
+                            <th>Operations</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (ContactUs item in Model ?? new List<ContactUs>() { })
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.Description</td>
+                                <td>@item.Address</td>
+                                <td>@item.MainPhone</td>
+                                <td>@item.SecondPhone</td>
+                                <td>@item.MainEmail</td>
+                                <td>@item.SecondEmail</td>
+                                <td>@item.MapX</td>
+                                <td>@item.MapY</td>
+                                <td>
+                                    <a href="/admin/contactus/edit/@item.Id">
+                                        <i class="material-icons">mode_edit</i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Basic Examples -->

@@ -1,0 +1,176 @@
+﻿@model Order
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+
+@section Styles
+{
+<link rel="stylesheet" type="text/css" href="/admin/devextreme/css/dx.material.blue.light.css" />
+}
+
+@section Scripts
+{
+<script src="/admin/devextreme/js/dx.all.js"></script>
+
+<script src="/admin/js/filemanager.js"></script>
+
+<!-- TinyMCE -->
+<script src="/admin/plugins/tinymce/tinymce.js"></script>
+
+<script>
+    var imageIndex = 0;
+
+    function addImageRow(file = { title: "", parentId: "", imageLink: ""}){
+        let innerHtml = `
+        <div class="row clone_images" id="image-index-` + imageIndex + `">
+            <input type="hidden" name="productimages[` + imageIndex + `][parentid]" value="` + file.parentId + `" />
+            <input type="hidden" name="productimages[` + imageIndex + `][id]" value="` + file.id + `" />
+            <div class="col-md-3">
+                <img src="` + file.imageLink + `" style="height: 100px; margin-bottom: 2rem;" alt="">
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Image Name</label>
+                        <input required name="productimages[`+ imageIndex +`][title]" class="form-control" value="` + file.title + `"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <div class="form-line">
+                        <label class="control-label">Image Link</label>
+                        <input required name="productimages[`+ imageIndex +`][imageLink]" class="form-control" value="` + file.imageLink + `"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <button type="button" class="btn btn-default waves-effect m-r-20 clone-images-button" onclick='defineParameterName("productimages[`+ imageIndex +`][imageLink]")' data-toggle="modal" data-target="#file-manager-popup">Select Image</button>
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <button type="button" class="btn btn-danger waves-effect m-r-20" onclick='$("#image-index-` + imageIndex + `").remove() && renumber_images()'>Remove</button>
+                </div>
+            </div>
+        </div>`;
+        $("#list-of-images").append(innerHtml);
+        imageIndex++;
+    }
+
+</script>
+
+
+<script>
+    $("#savebutton").click(function(){
+        var value = $("#Slug").val();
+        var text=$("#Title").val()
+        if(value=="")
+        {
+            $('#Slug').val(convertToSlug(text));
+        }
+    });
+    function convertToSlug(Text) {
+      return Text.toLowerCase()
+                 .replace(/[^\w ]+/g, '')
+                 .replace(/ +/g, '-');
+    }
+
+    function renumber_images() {
+        $(".clone_images").each(function(index) {
+            $(this).find(".clone-images-button").attr("onclick","defineParameterName('productimages["+index+"][imageLink]')");
+            var prefix = "productimages[" + index + "]";
+            $(this).find("input").each(function() {
+                this.name = this.name.replace(/productimages\[\d+\]/, prefix);
+            });
+        });
+    }
+</script>
+}
+
+<partial name="_FileManagerModalPartial" />
+
+<!-- Vertical Layout -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+            </div>
+            <div class="body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <div class="form-group">
+                            <div class="form-line">
+                                <label asp-for="Name" class="control-label"></label>
+                                <input readonly asp-for="Name" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input readonly asp-for="Email" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Phone" class="control-label"></label>
+                            <input readonly type="text" asp-for="Phone" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Address" class="control-label"></label>
+                            <input readonly type="text" asp-for="Address" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-line">
+                            <label asp-for="Desc" class="control-label"></label>
+                            <textarea readonly id="tinymce" asp-for="Desc" class="form-control"></textarea>
+                        </div>
+                    </div>
+                    <div id="list-of-images">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Product Name</th>
+                                    <th>Product Count</th>
+                                    <th>Product Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (OrderProduct item in Model?.OrderProducts ?? new List<OrderProduct>())
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="/products/details/@item?.Product?.Slug" target="_blank">@item?.Product?.Title</a>
+                                        </td>
+                                        <td>
+                                            @item?.ProductCount
+                                            </td>
+                                        <td>
+                                            @if(item?.Product?.Discount?? false)
+                                            {
+                                                @Html.Raw($"${Math.Round(item.Product.Price*((100-item.Product.DiscountRate))/100,2)}")
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw($"${item?.Product?.Price}")   
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Vertical Layout -->

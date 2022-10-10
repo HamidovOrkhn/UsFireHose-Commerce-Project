@@ -1,0 +1,76 @@
+﻿@model ProductCategory
+@{
+    List<ProductCategory> productCategories = (List<ProductCategory>)ViewData["ProductCategories"]!;
+    Dictionary<string, string>? settings = (Dictionary<string, string>?)ViewData["Settings"];
+    string category = (string)ViewData["Category"]!;
+}
+<div style="background-image: url(@settings?["categories_cover_image"]?);" class="breadcrumb-area">
+    <div class="container">
+        <div class="breadcrumb-content">
+            <h2>@Model?.Title</h2>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li class="active">Category</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<!-- Uren's Breadcrumb Area End Here -->
+<!-- Begin Uren's Shop Left Sidebar Area -->
+<div class="shop-content_wrapper">
+    <div style="padding:0 !important;" class="uren-blog_area uren-blog-details">
+        <div class="uren-blog-blockquote">
+            <blockquote>
+                @Html.Raw(Model?.Description)
+            </blockquote>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                @if (productCategories!.Where(x => x.ParentId == Model?.Id).Any())
+                {
+                    <div class="shop-toolbar">
+                        <div class="product-view-mode">
+                            <a class="grid-1" data-target="gridview-1" data-toggle="tooltip" data-placement="top" title="1">1</a>
+                            <a class="grid-2" data-target="gridview-2" data-toggle="tooltip" data-placement="top" title="2">2</a>
+                            <a class="active grid-3" data-target="gridview-3" data-toggle="tooltip" data-placement="top" title="3">3</a>
+                            <a class="grid-4" data-target="gridview-4" data-toggle="tooltip" data-placement="top" title="4">4</a>
+                            <a class="grid-5" data-target="gridview-5" data-toggle="tooltip" data-placement="top" title="5">5</a>
+                        </div>
+                    </div>
+                    <div class="shop-product-wrap grid gridview-3 img-hover-effect_area row">
+
+                        @foreach (ProductCategory item in productCategories!.Where(x => x.ParentId == Model?.Id).ToList())
+                        {
+                            <div class="col-lg-4">
+                                <div class="product-slide_item">
+                                    <div class="inner-slide">
+                                        <div class="single-product">
+                                            <div class="product-img">
+                                                <a href="/products?category=@item.Slug">
+                                                    <img class="primary-img" src="@item.ImagePath" alt="@item.Title">
+                                                </a>
+                                            </div>
+                                            <div class="product-content">
+                                                <div class="product-desc_info">
+                                                    <h6><a class="product-name" href="/products?category=@item.Slug">@item.Title</a></h6>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    </div>
+                }
+                else
+                {
+                    <h1 class="mb-5" style="text-align:center;">Nothing Found</h1>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Shop Left Sidebar Area End Here -->

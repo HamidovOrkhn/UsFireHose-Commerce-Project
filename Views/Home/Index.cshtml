@@ -1,0 +1,323 @@
+﻿@{
+    List<Slide> slides = (List<Slide>)ViewData["Slides"]!;
+    List<ProductCategory> mainProductCategories = (List<ProductCategory>)ViewData["MainProductCategories"]!;
+    List<ProductCategory> productCategories = (List<ProductCategory>)ViewData["ProductCategories"]!;
+    List<Product> newProducts = (List<Product>)ViewData["NewProducts"]!;
+    List<Blog> newBlogs = (List<Blog>)ViewData["NewBlogs"]!;
+    List<Product> sellingProducts = (List<Product>)ViewData["SellingProducts"]!;
+    List<Banner> banners = (List<Banner>)ViewData["Banners"]!;
+    bool shoppingCartResponse = (bool?)TempData["ShoppingCartResponse"] ?? false;
+}
+<div class="uren-slider_area uren-slider_area-2">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="main-slider slider-navigation_style-2">
+                    <!-- Begin Single Slide Area -->
+                    @if (slides is not null)
+                    {
+                        @foreach (Slide item in slides)
+                        {
+                            <div style="background-image:url(@item.Image) !important; background-repeat: no-repeat; background-position: center center; background-size: cover; min-height: 550px;" class="single-slide">
+                                <div class="slider-content">
+                                    <span>@item.TopTitle</span>
+                                    <h3>@item.MainTitle</h3>
+                                    <h4>@item.SubTitle</h4>
+                                    <div class="uren-btn-ps_left slide-btn">
+                                        <a class="uren-btn" href="@item.Slug">@item.ButtonTitle</a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+
+                    <!-- Single Slide Area End Here -->
+                    <!-- Begin Single Slide Area -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Begin Featured Categories Area -->
+<div class="featured-categories_area">
+    <div class="container-fluid">
+        <div class="section-title_area">
+            <span>Top Featured Collections</span>
+            <h3>Featured Categories</h3>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="featured-categories_slider uren-slick-slider slider-navigation_style-1" data-slick-options='{
+                        "slidesToShow": 4,
+                        "spaceBetween": 30,
+                        "arrows" : true
+                       }' data-slick-responsive='[
+                                             {"breakpoint":1599, "settings": {"slidesToShow": 3}},
+                                             {"breakpoint":1200, "settings": {"slidesToShow": 2}},
+                                             {"breakpoint":768, "settings": {"slidesToShow": 1}}
+                                         ]'>
+                    @if (mainProductCategories is not null)
+                    {
+                        @foreach (ProductCategory item in mainProductCategories)
+                        {
+                            <div class="slide-item">
+                                <div style="height:300px;" class="slide-inner">
+                                    <div class="slide-image_area">
+                                        <a href="/category/@item.Slug">
+                                            <img src="@item.ImagePath" alt="@item.Title">
+                                        </a>
+                                    </div>
+                                    <div class="slide-content_area">
+                                        <h3><a href="/category/@item.Slug">@item.Title</a></h3>
+                                        <span>@(productCategories.Any(x=>x.ParentId==item.Id)==true?productCategories.Where(x=>x.ParentId==item.Id).Sum(x=>x.Products?.Count):@item.Products?.Count) Products</span>
+                                        <ul class="product-item">
+                                            @if (productCategories.Where(x => x.ParentId == item.Id).ToList() is not null)
+                                            {
+                                                @foreach (ProductCategory category in productCategories.Where(x => x.ParentId == item.Id).OrderByDescending(x => x.Products?.Count).Take(4))
+                                                {
+                                                    <li>
+                                                        <a href="/products?category=@category.Slug"><i class="fa fa-arrow-right"></i> @category.Title</a>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                        <div class="uren-btn-ps_left">
+                                            <a class="uren-btn" href="/category/@item.Slug">Read More</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Featured Categories Area End Here -->
+<!-- Begin Uren's Product Area -->
+<div class="uren-product_area">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title_area">
+                    <h3>New Arrivals Products</h3>
+                </div>
+                <div class="product-slider uren-slick-slider slider-navigation_style-1 img-hover-effect_area" data-slick-options='{
+                        "slidesToShow": 6,
+                        "arrows" : true
+                        }' data-slick-responsive='[
+                                                {"breakpoint":1501, "settings": {"slidesToShow": 4}},
+                                                {"breakpoint":1200, "settings": {"slidesToShow": 3}},
+                                                {"breakpoint":992, "settings": {"slidesToShow": 2}},
+                                                {"breakpoint":767, "settings": {"slidesToShow": 1}},
+                                                {"breakpoint":480, "settings": {"slidesToShow": 1}}
+                                            ]'>
+                    @if (newProducts is not null)
+                    {
+                        @foreach (Product item in newProducts)
+                        {
+                            <div style="height: 300px;" class="product-slide_item">
+                                <div style="height:300px !important;" class="inner-slide">
+                                    <div style="height:300px !important;" class="single-product">
+                                        <div class="product-img">
+                                            <a href="/products/details/@item.Slug">
+                                                <img class="primary-img" src="@item.ImageLink" alt="Uren's Product Image">
+                                                <img class="secondary-img" src="@item.ProductImages?.FirstOrDefault()?.ImageLink" alt="Uren's Product Image">
+                                            </a>
+                                            @if (item.Discount)
+                                            {
+                                                <div class="sticker-area-2">
+                                                    <span class="sticker-2">-@item.DiscountRate%</span>
+                                                    @if (newProducts!.Any(x => x.Id == item.Id))
+                                                    {
+                                                        <span class="sticker">New</span>
+                                                    }
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                @if (newProducts!.Any(x => x.Id == item.Id))
+                                                {
+                                                    <span class="sticker">New</span>
+                                                }
+                                            }
+                                            <div class="add-actions">
+                                                <ul>
+                                                    <li>
+                                                        <a class="uren-add_cart add-to-cart-button" value="@item.Id" data-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="product-content">
+                                            <div class="product-desc_info">
+                                                <h6 style="text-overflow: ellipsis; overflow: hidden; width: 220px; height: 2.4em; white-space: nowrap;"><a class="product-name" href="/products/details/@item.Slug">@item.Title</a></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Product Area End Here -->
+<!-- Begin Uren's Banner Area -->
+<div class="uren-banner_area @@bgColor">
+    <div class="container-fluid">
+        <div class="row">
+            @if (banners is not null)
+            {
+                @foreach (Banner item in banners)
+                {
+                    <div class="col-lg-4">
+                        <div class="banner-item img-hover_effect">
+                            <div style="background-image:url(@item.ImagePath)" class="banner-img-1"></div>
+                            <div class="banner-content">
+                                <span class="offer">@item.TopTitle</span>
+                                <h3>@item.MainTitle</h3>
+                                <p>@item.SubTitle</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<!-- Uren's Banner Area End Here -->
+<!-- Begin Uren's Best Selling Product Area -->
+<div class="best-selling-product_area">
+    <div class="container-fluid">
+        <div class="section-title_area">
+            <h3>Best Selling Products</h3>
+        </div>
+        <div class="row no-gutters">
+            <div class="col-12">
+                <div class="best-selling_slider uren-slick-slider slider-navigation_style-1 img-hover-effect_area" data-slick-options='{
+                    "slidesToShow": 5,
+                    "arrows" : true,
+                    "rows": 2
+                    }' data-slick-responsive='[
+                        {"breakpoint":1501, "settings": {"slidesToShow": 4}},
+                        {"breakpoint":1200, "settings": {"slidesToShow": 2}},
+                        {"breakpoint":768, "settings": {"slidesToShow": 1, "rows": 1}},
+                        {"breakpoint":575, "settings": {"slidesToShow": 1, "rows": 2}}
+                    ]'>
+                    @if (sellingProducts is not null)
+                    {
+                        @foreach (Product item in sellingProducts)
+                        {
+                            <div class="product-slide_item">
+                                <div class="inner-slide">
+                                    <div class="single-product">
+                                        <div class="product-img">
+                                            <a href="/products/details/@item.Slug">
+                                                <img class="primary-img" src="@item.ImageLink" alt="Uren's Product Image">
+                                                <img class="secondary-img" src="@item.ProductImages?.FirstOrDefault()?.ImageLink" alt="Uren's Product Image">
+                                            </a>
+                                            @if (item.Discount)
+                                            {
+                                                <div class="sticker-area-2">
+                                                    <span class="sticker-2">-@item.DiscountRate%</span>
+                                                    @if (newProducts!.Any(x => x.Id == item.Id))
+                                                    {
+                                                        <span class="sticker">New</span>
+                                                    }
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                @if (newProducts!.Any(x => x.Id == item.Id))
+                                                {
+                                                    <span class="sticker">New</span>
+                                                }
+                                            }
+                                            <div class="add-actions">
+                                                <ul>
+                                                    <li>
+                                                        <a class="uren-add_cart add-to-cart-button" value="@item.Id" data-toggle="tooltip" data-placement="top" title="Add To Cart"><i class="ion-bag"></i></a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        <div class="product-content">
+                                            <div class="product-desc_info">
+                                                <h6 style="text-overflow: ellipsis; overflow: hidden; width: 270px; height: 2.4em; white-space: nowrap;"><a class="product-name" href="/products/details/@item.Slug">@item.Title</a></h6>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Best Selling Product Area End Here -->
+<!-- Begin Uren's Blog Area -->
+<div class="uren-blog_area bg--white_smoke">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title_area">
+                    <span>Our Recent Posts</span>
+                    <h3>From Our Blogs</h3>
+                </div>
+                <div class="blog-slider uren-slick-slider slider-navigation_style-1" data-slick-options='{
+                        "slidesToShow": 4,
+                        "spaceBetween": 30,
+                        "arrows" : true
+                        }' data-slick-responsive='[
+                            {"breakpoint":1200, "settings": {"slidesToShow": 3}},
+                            {"breakpoint":992, "settings": {"slidesToShow": 2}},
+                            {"breakpoint":768, "settings": {"slidesToShow": 2}},
+                            {"breakpoint":576, "settings": {"slidesToShow": 1}}
+                        ]'>
+                    @if (newBlogs is not null)
+                    {
+                        foreach (Blog item in newBlogs)
+                        {
+                            <div class="slide-item">
+                                <div class="inner-slide">
+                                    <div class="blog-img img-hover_effect">
+                                        <a href="blogs/details/@item.Slug">
+                                            <img style="height:280px;" src="@item.ImagePath" alt="@item.Title">
+                                        </a>
+                                        <span class="post-date">@item.CreatedDate.ToString("dd-MM-yy")</span>
+                                    </div>
+                                    <div class="blog-content">
+                                        <h3><a href="blogs/details/@item.Slug">@item.Title</a></h3>
+                                        <p>@item.SubTitle</p>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Uren's Blog Area End Here -->
+@section JS{
+<script>
+    @if (shoppingCartResponse)
+    {
+        @Html.Raw(@"Swal.fire(
+          'Successful Process!',
+          'Your order sended to the Customer. They will pick you order as soon as they can !',
+          'success'
+        )")
+    }
+</script>
+        }

@@ -1,0 +1,156 @@
+﻿@model IEnumerable<Slide>
+
+@{
+    ViewData["Title"] = "Slides";
+}
+
+@section Styles
+{
+<!-- JQuery DataTable Css -->
+<link href="/admin/plugins/jquery-datatable/skin/bootstrap/css/dataTables.bootstrap.min.css" rel="stylesheet">
+}
+
+@section Scripts
+{
+<!-- Jquery DataTable Plugin Js -->
+<script src="/admin/plugins/jquery-datatable/jquery.dataTables.js"></script>
+<script src="/admin/plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js"></script>
+<script src="/admin/plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js"></script>
+
+<script>
+    $(function () {
+        $('#datatable').DataTable( {
+            language: {
+                url: '/admin/plugins/jquery-datatable/Azerbaijan.json'
+            },
+            autoWidth: false,
+            fixedHeader : true,
+            scrollX: true
+        } );
+    });
+</script>
+}
+
+<!-- Basic Examples -->
+<div class="row clearfix">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="card">
+            <div class="header">
+                <h2>
+                    @ViewData["Title"]
+                </h2>
+                <ul class="header-dropdown m-r--5">
+                    <li class="dropdown">
+                        <a href="/admin/slide/create" class="btn btn-primary waves-effect">Create</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="body">
+                <div asp-validation-summary="All" class="text-danger"></div>
+                <table id="datatable" class="table table-bordered table-striped table-hover dataTable">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TopTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SubTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MainTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Image)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ButtonTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Slug)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Order)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>Operations</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Id)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.TopTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.SubTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.MainTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Image)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.ButtonTitle)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Slug)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Order)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Status)
+                            </th>
+                            <th>Operations</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        @foreach (Slide item in Model ?? new List<Slide>() { })
+                        {
+                            <tr>
+                                <td>@item.Id</td>
+                                <td>@item.TopTitle</td>
+                                <td>@item.SubTitle</td>
+                                <td>@item.MainTitle</td>
+                                <td><img src="@item.Image" style="height: 100px" alt="" /></td>
+                                <td>@item.ButtonTitle</td>
+                                <td>@item.Slug</td>
+                                <td>@item.Order</td>
+                                <td>
+                                    <div class="switch">
+                                        <label>
+                                            Passive
+                                            <input type="checkbox" checked="@item.Status" disabled><span class="lever"></span>
+                                            Active
+                                        </label>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a href="/admin/slide/edit/@item.Id">
+                                        <i class="material-icons">mode_edit</i>
+                                    </a>
+                                    <a href="#" onclick="deleteModal('delete@(item.Id)');">
+                                        <i class="material-icons" style="color: #fb483a">delete</i>
+                                    </a>
+
+                                    <form id='delete@(item.Id)' method="post" action="/admin/slide/delete">
+                                        <input type="hidden" name="id" value="@item.Id" />
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #END# Basic Examples -->
